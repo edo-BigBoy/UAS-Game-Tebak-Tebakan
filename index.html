@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./src/output.css" rel="stylesheet">
+</head>
+<body class="bg-linear-to-br from-slate-900 via-slate-800 to-slate-700">
+ <div class="min-h-screen flex flex-col items-center justify-center">
+    <h1 id="jdl" class="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-white text-center">
+      Selamat datang! Siap ngetes otak kamu hari ini?
+    </h1>
+    <div class="flex flex-col sm:flex-row sm:space-x-5 space-y-4 sm:space-y-0">
+        <button id="openLogin" 
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+          MULAI PERMAINAN
+        </button>
+
+        <button id="openDocs" 
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+          PANDUAN PERMAINAN
+        </button>
+    </div>
+
+
+  <!-- Card Login (default: hidden) -->
+  <div id="loginCard"class="hidden mt-6 w-80 p-6 bg-white shadow-xl rounded-xl border border-gray-200">
+    <div class="relative flex items-center">
+      <div class="absolute right-3"><button id="closeLogin"class="mb-4 text-gray-800"><i data-lucide="x"></i></button></div>
+      <div class="mx-auto"><h2 class="text-xl font-semibold mb-4 text-gray-800">Login</h2></div>
+    </div>
+    
+
+    <div class="flex flex-col space-y-3">
+      <input type="text" id="username"  placeholder="Username"class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring">
+      <div class="flex flex-row justify-center space-x-7 ">
+        <label>
+          <input type="radio" id="cek" name="soal" value="PilihanGanda" class="peer hidden ">
+          <div class="border-3 w-30  h-30  border-gray-300 rounded-lg overflow-hidden transition peer-checked:border-blue-500 peer-checked:shadow-lg flex flex-col items-center justify-center">
+            <img src="img/pg.png" alt="logo" class="w-20 h-20 object-cover">
+            <p class="text-xs font-semibold mt-2">PILIHAN GANDA</p>
+          </div>
+        </label>
+        <label>
+          <input type="radio" id="cek"  name="soal" value="BenarSalah" class="peer hidden">
+          <div class="border-3  w-30  h-30 border-gray-300 rounded-lg overflow-hidden transition peer-checked:border-blue-500 peer-checked:shadow-lg flex flex-col items-center justify-center">
+            <img src="img/tf.png" alt="logo" class="w-20 h-20 object-cover">
+            <p class="text-xs font-semibold mt-2">BENAR SALAH</p>
+          </div>
+        </label>
+        
+      </div>
+      
+      <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" id="msk">
+        Masuk
+      </button>
+    </div>
+
+    
+  </div>
+  
+  <!-- Card Dokumentasi (default: hidden) -->
+  <div id="doc" class="hidden  mt-6 w-80 p-6 bg-white shadow-xl rounded-xl border border-gray-200">
+    <div class="relative flex items-center">
+      <div class="absolute right-3"><button id="closeDocs"class="mb-4 text-gray-800"><i data-lucide="x"></i></button></div>
+      <div class="mx-auto"><h2 class="text-xl font-semibold mb-4 text-gray-800">Panduan Permainan</h2></div>
+    </div>
+    <hr>
+    <ol class="list-decimal pl-5 space-x-4">
+      <li>Langkah pertama yang harus dilakukan</li>
+      <li>Langkah kedua untuk melanjutkan proses</li>
+      <li>Langkah ketiga sebagai penyelesaian</li>
+    </ol>
+
+  </div>
+
+</div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  const masuk = document.getElementById('msk');
+  const username = document.getElementById('username');
+  const open = document.getElementById('openLogin');
+  const close = document.getElementById('closeLogin');
+  const card = document.getElementById('loginCard');
+  const judul = document.getElementById('jdl');
+  const panduan = document.getElementById('doc');
+  const pandu = document.getElementById('openDocs');
+  const tutupDocs = document.getElementById('closeDocs')
+
+  masuk.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="soal"]:checked')?.value;
+    const nama = username.value;
+    if((nama == null || nama === "") && (selected == null || selected === "")) {
+      alert("Mohon isi Username dan pilih tipe game");
+    } else {
+      console.log(nama);
+      console.log(selected);
+      window.location.href = "main.html";
+
+    };
+    
+  });
+
+  function muncul() {
+    judul.classList.add('hidden');
+    pandu.classList.add('hidden');
+    open.classList.add('hidden');
+  };
+  function tutup() {
+    judul.classList.remove('hidden');
+    pandu.classList.remove('hidden');
+    open.classList.remove('hidden');
+  };
+
+  pandu.addEventListener('click', () => {
+    panduan.classList.remove('hidden');
+    muncul();
+  })
+
+  open.addEventListener('click', () => {
+    card.classList.remove('hidden');
+    muncul();
+  });
+ 
+  close.addEventListener('click', () => {
+    card.classList.add('hidden');
+    tutup();
+  });
+  
+  tutupDocs.addEventListener('click', () => {
+    panduan.classList.add('hidden');
+    tutup();
+  })
+</script>
+<script>
+  lucide.createIcons();
+</script>
+</body> 
+</html>
