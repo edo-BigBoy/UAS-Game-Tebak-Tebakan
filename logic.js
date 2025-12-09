@@ -7,6 +7,18 @@ class QuestionProvider {
     }
 }
 
+const popup = document.getElementById("popup");
+const closePopup = document.getElementById("closePopup");
+
+function showPopup() {
+  popup.classList.remove("hidden");
+}
+
+closePopup.addEventListener("click", () => {
+  popup.classList.add("hidden");
+  window.location.href = "index.html";
+});
+
 
 // ==========================================
 // 2. INHERITANCE + POLYMORPHISM
@@ -47,6 +59,7 @@ class OpenTriviaProvider extends QuestionProvider {
 // 3. GAME CLASS (ENCAPSULATION + LOGIC GAME)
 // ==========================================
 class Game {
+    score = 0;
     #nyawa = 3;        // private
     #username = "PLAYER"; 
     #provider;
@@ -79,13 +92,15 @@ class Game {
 
             if (this.#timeLeft <= 0) {
                 this.reduceLife();
-                this.nextQuestion();
             }
         }, 1000);
     }
 
     updateTimerDisplay() {
         document.getElementById("time").textContent = `${this.#timeLeft}s`;
+    }
+    updateScoreDisplay() {
+        document.getElementById("skorTampil").textContent = this.score;
     }
 
     // -----------------------------
@@ -96,9 +111,12 @@ class Game {
         this.updateNyawaDisplay();
 
         if (this.#nyawa <= 0) {
-            alert("Game Over 😭");
+            // alert("Game Over 😭");
             // location.reload();
-            window.location.href = "index.html";
+            // window.location.href = "index.html";
+            this.updateScoreDisplay();
+            showPopup();
+            return;
         }else {
             this.nextQuestion();
         }
@@ -141,7 +159,7 @@ class Game {
     // -----------------------------
     checkAnswer(selected, correct) {
         if (selected === correct) {
-            alert("ANDA BENAR");
+            this.score += 10;
             this.nextQuestion();
         } else {
             alert("SALAH YANG BENAR: " + correct);
