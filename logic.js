@@ -25,33 +25,49 @@ closePopup.addEventListener("click", () => {
 // OpenTrivia Provider
 // ==========================================
 class OpenTriviaProvider extends QuestionProvider {
+    #questions = [];  // menyimpan batch soal
+    #index = 0;       // penunjuk soal saat ini
 
-    async fetchQuestion() {
-        const res = await fetch("https://opentdb.com/api.php?amount=1&type=multiple");
+    async loadQuestions(amount = 20) {
+        const res = await fetch(`https://opentdb.com/api.php?amount=${amount}&type=multiple`);
         const data = await res.json();
-        const q = data.results[0];
 
+        // decode helper
         const decode = (str) => {
             const txt = document.createElement("textarea");
             txt.innerHTML = str;
             return txt.value;
         };
 
-        const answers = [...q.incorrect_answers, q.correct_answer];
+        this.#questions = data.results.map(q => {
+            const answers = [...q.incorrect_answers, q.correct_answer];
 
-        // Shuffle manual (lebih terkontrol)
-        for (let i = answers.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [answers[i], answers[j]] = [answers[j], answers[i]];
+            // Shuffle manual
+            for (let i = answers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [answers[i], answers[j]] = [answers[j], answers[i]];
+            }
+
+            return {
+                question: decode(q.question),
+                correct: decode(q.correct_answer),
+                answers: answers.map(a => decode(a))
+            };
+        });
+    }
+
+    async fetchQuestion() {
+        // Jika array habis → load ulang
+        if (this.#questions.length === 0 || this.#index >= this.#questions.length) {
+            await this.loadQuestions(20);
+            this.#index = 0;
         }
 
-        return {
-            question: decode(q.question),
-            correct: decode(q.correct_answer),
-            answers: answers.map(a => decode(a))
-        };
+        // ambil soal lalu increment
+        return this.#questions[this.#index++];
     }
 }
+
 
 
 
@@ -59,8 +75,7 @@ class OpenTriviaProvider extends QuestionProvider {
 // 3. GAME CLASS (ENCAPSULATION + LOGIC GAME)
 // ==========================================
 class Game {
-    score = 0;
-    #nyawa = 3;        // private
+    score = 0;       
     #username = "PLAYER"; 
     #provider;
     #timerInterval;
@@ -75,11 +90,17 @@ class Game {
     // -----------------------------
     start() {
         document.getElementById("username").textContent = this.#username;
-        this.updateNyawaDisplay();
         this.nextQuestion();
         this.startTimer();
     }
+    reset() {
+        clearInterval(this.#timerInterval); // stop timer lama
 
+        this.score = 0;
+        this.#timeLeft = 60;
+        this.updateScoreDisplay();
+        this.updateTimerDisplay();
+    }
     // -----------------------------
     // TIMER
     // -----------------------------
@@ -107,30 +128,27 @@ class Game {
     // LIFE
     // -----------------------------
     reduceLife() {
-        this.#nyawa--;
-        this.updateNyawaDisplay();
+     
 
-        if (this.#nyawa <= 0) {
+        if (this.#timeLeft <= 0) {
             // alert("Game Over 😭");
             // location.reload();
             // window.location.href = "index.html";
+            document.getElementById("time").textContent = "0";
+            document.getElementById("time").textContent = " GAME OVER !!!";
             this.updateScoreDisplay();
             showPopup();
-            return;
         }else {
             this.nextQuestion();
         }
     }
 
-    updateNyawaDisplay() {
-        document.getElementById("nyawa").textContent = "❤".repeat(this.#nyawa);
-    }
+    
 
     // -----------------------------
     // QUESTION HANDLING
     // -----------------------------
     async nextQuestion() {
-        this.#timeLeft = 60;
         this.updateTimerDisplay();
 
         const q = await this.#provider.fetchQuestion();
@@ -158,16 +176,31 @@ class Game {
     // CHECK ANSWER
     // -----------------------------
     checkAnswer(selected, correct) {
+        const buttons = document.querySelectorAll("#jawaban button");
+        
+        buttons.forEach(btn => btn.disabled = true); // cegah spam klik
+
+        buttons.forEach(btn => {
+            btn.classList.remove("hover:bg-gray-200");
+            if (btn.textContent === correct) {
+                btn.classList.add("!bg-green-400");  // jawaban benar
+            }
+
+            if (btn.textContent === selected && selected !== correct) {
+                btn.classList.add("!bg-red-400"); // jawaban salah
+            }
+        });
+
         if (selected === correct) {
             this.score += 10;
-            this.nextQuestion();
-        } else {
-            alert("SALAH YANG BENAR: " + correct);
-            this.reduceLife();
+            this.updateScoreDisplay();
         }
 
-        
+        setTimeout(() => {
+            this.nextQuestion();
+        }, 1000);
     }
+
 }
 
 
@@ -178,6 +211,8 @@ class Game {
 const provider = new OpenTriviaProvider();
 const game = new Game(provider);
 
-window.onload = () => {
+window.onload = async() => {
+    await provider.loadQuestions();
+    game.reset();
     game.start();
 };
