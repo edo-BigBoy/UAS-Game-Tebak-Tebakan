@@ -20,6 +20,7 @@ closePopup.addEventListener("click", () => {
 });
 
 
+
 // ==========================================
 // 2. INHERITANCE + POLYMORPHISM
 // OpenTrivia Provider
@@ -68,15 +69,11 @@ class OpenTriviaProvider extends QuestionProvider {
     }
 }
 
-
-
-
 // ==========================================
 // 3. GAME CLASS (ENCAPSULATION + LOGIC GAME)
 // ==========================================
 class Game {
     score = 0;       
-    #username = "PLAYER"; 
     #provider;
     #timerInterval;
     #timeLeft = 60;    // 60 detik per soal
@@ -89,7 +86,6 @@ class Game {
     // INIT GAME
     // -----------------------------
     start() {
-        document.getElementById("username").textContent = this.#username;
         this.nextQuestion();
         this.startTimer();
     }
@@ -97,7 +93,7 @@ class Game {
         clearInterval(this.#timerInterval); // stop timer lama
 
         this.score = 0;
-        this.#timeLeft = 60;
+        this.#timeLeft = 10;
         this.updateScoreDisplay();
         this.updateTimerDisplay();
     }
@@ -121,23 +117,33 @@ class Game {
         document.getElementById("time").textContent = `${this.#timeLeft}s`;
     }
     updateScoreDisplay() {
+        document.getElementById("now_score").textContent = this.score;
+    }
+    skorakhir() {
         document.getElementById("skorTampil").textContent = this.score;
+    }
+    simpan() {
+        const riwayat = JSON.parse(localStorage.getItem("dataGame")) || [];
+
+        riwayat.push({
+            skor: this.score,
+            tanggal: new Date().toISOString()
+        });
+
+        localStorage.setItem("dataGame", JSON.stringify(riwayat)); 
     }
 
     // -----------------------------
     // LIFE
     // -----------------------------
     reduceLife() {
-     
-
         if (this.#timeLeft <= 0) {
-            // alert("Game Over 😭");
-            // location.reload();
-            // window.location.href = "index.html";
+            clearInterval(this.#timerInterval);
             document.getElementById("time").textContent = "0";
-            document.getElementById("time").textContent = " GAME OVER !!!";
-            this.updateScoreDisplay();
+            document.getElementById("game").classList.add("opacity-0", "pointer-events-none");
+            this.skorakhir();
             showPopup();
+            this.simpan();
         }else {
             this.nextQuestion();
         }
@@ -183,7 +189,9 @@ class Game {
         buttons.forEach(btn => {
             btn.classList.remove("hover:bg-gray-200");
             if (btn.textContent === correct) {
-                btn.classList.add("!bg-green-400");  // jawaban benar
+                // jawaban benar
+                btn.classList.add("!bg-green-400");
+                  
             }
 
             if (btn.textContent === selected && selected !== correct) {

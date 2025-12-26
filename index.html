@@ -7,69 +7,55 @@
 </head>
 <body class="bg-linear-to-br from-slate-900 via-slate-800 to-slate-700">
  <div class="min-h-screen flex flex-col items-center justify-center">
-    <h1 id="jdl" class="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-white text-center">
-      Selamat datang! Siap ngetes otak kamu hari ini?
+   <div id="jdl">
+     <h1  class="text-5xl sm:text-5xl md:text-5xl font-bold mb-6 text-white text-center">
+      Selamat datang
     </h1>
+    <h2  class="text-xl sm:text-2xl md:text-2xl font-bold mb-6 text-white text-center">
+      Siap ngetes otak kamu hari ini?
+    </h2>
+   </div>
     <div class="flex flex-col sm:flex-row sm:space-x-5 space-y-4 sm:space-y-0">
-        <button id="openLogin" 
+        <button id="openRiw" 
           class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
-          MULAI PERMAINAN
+          RIWAYAT
+        </button>
+
+        <button id="msk" 
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+          MULAI
         </button>
 
         <button id="openDocs" 
           class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
-          PANDUAN PERMAINAN
+          PANDUAN
         </button>
     </div>
-
-
-  <!-- Card Login (default: hidden) -->
-  <div id="loginCard"class="hidden mt-6 w-80 p-6 bg-white shadow-xl rounded-xl border border-gray-200">
-    <div class="relative flex items-center">
-      <div class="absolute right-3"><button id="closeLogin"class="mb-4 text-gray-800"><i data-lucide="x"></i></button></div>
-      <div class="mx-auto"><h2 class="text-xl font-semibold mb-4 text-gray-800">Login</h2></div>
-    </div>
-    
-
-    <div class="flex flex-col space-y-3">
-      <input type="text" id="username"  placeholder="Username"class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring">
-      <div class="flex flex-row justify-center space-x-7 ">
-        <label>
-          <input type="radio" id="cek" name="soal" value="PilihanGanda" class="peer hidden ">
-          <div class="border-3 w-30  h-30  border-gray-300 rounded-lg overflow-hidden transition peer-checked:border-blue-500 peer-checked:shadow-lg flex flex-col items-center justify-center">
-            <img src="img/pg.png" alt="logo" class="w-20 h-20 object-cover">
-            <p class="text-xs font-semibold mt-2">PILIHAN GANDA</p>
-          </div>
-        </label>
-        <label>
-          <input type="radio" id="cek"  name="soal" value="BenarSalah" class="peer hidden">
-          <div class="border-3  w-30  h-30 border-gray-300 rounded-lg overflow-hidden transition peer-checked:border-blue-500 peer-checked:shadow-lg flex flex-col items-center justify-center">
-            <img src="img/tf.png" alt="logo" class="w-20 h-20 object-cover">
-            <p class="text-xs font-semibold mt-2">BENAR SALAH</p>
-          </div>
-        </label>
-        
-      </div>
-      
-      <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" id="msk">
-        Masuk
-      </button>
+  <!-- Card History (default: hidden) -->
+  <div id="Histori" class="hidden  mt-6 w-90  p-6 bg-white shadow-xl rounded-xl border border-gray-200">
+    <div class="relative flex items-center-safe py-5">
+      <div class="absolute right-3"><button id="close"class="mb-4 text-gray-800"><i data-lucide="x"></i></button></div>
+      <div class="absolute left-3"><h2 class="text-xl font-bold mb-4 text-gray-800">RIWAYAT</h2></div>
     </div>
 
-    
+    <ol id="riwayat" class=" space-x-4 space-y-1"></ol>
+
   </div>
   
   <!-- Card Dokumentasi (default: hidden) -->
   <div id="doc" class="hidden  mt-6 w-80 p-6 bg-white shadow-xl rounded-xl border border-gray-200">
-    <div class="relative flex items-center">
+    <div class="relative flex items-center py-5">
       <div class="absolute right-3"><button id="closeDocs"class="mb-4 text-gray-800"><i data-lucide="x"></i></button></div>
-      <div class="mx-auto"><h2 class="text-xl font-semibold mb-4 text-gray-800">Panduan Permainan</h2></div>
+      <div class="mx-auto absolute left-3"><h2 class="text-xl font-semibold mb-4 text-gray-800">Panduan Permainan</h2></div>
     </div>
     <hr>
     <ol class="list-decimal pl-5 space-x-4">
-      <li>Langkah pertama yang harus dilakukan</li>
-      <li>Langkah kedua untuk melanjutkan proses</li>
-      <li>Langkah ketiga sebagai penyelesaian</li>
+      <li>Dimenu awal terdapat tombol mulai untuk user memulai game</li>
+      <li>Pertanyaan Dalam Bahasa Inggris</li>
+      <li>Jawab Pertanyaan sebanyak mungkin dalam waktu 60 detik</li>
+      <li>Setiap Jawaban benar akan mendapatkan 10 poin/score </li>
+      <li>Setelah waktu habis,maka total poin/score yang diperoleh akan ditampilkan, dan user bisa mengulangi game lagi dari awal</li>
+      <li>Dimenu awal terdapat tombol Riwayat guna melihat riwayat score yang diperoleh user</li>
     </ol>
 
   </div>
@@ -77,60 +63,68 @@
 </div>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
+
   const masuk = document.getElementById('msk');
-  const username = document.getElementById('username');
-  const open = document.getElementById('openLogin');
-  const close = document.getElementById('closeLogin');
-  const card = document.getElementById('loginCard');
   const judul = document.getElementById('jdl');
   const panduan = document.getElementById('doc');
   const pandu = document.getElementById('openDocs');
-  const tutupDocs = document.getElementById('closeDocs')
+  const tutupDocs = document.getElementById('closeDocs');
+  const hst = document.getElementById('openRiw');
+  const c_hst = document.getElementById('Histori');
+  const ttp_his = document.getElementById('close');
 
-  masuk.addEventListener('click', () => {
-    const selected = document.querySelector('input[name="soal"]:checked')?.value;
-    const nama = username.value;
-    if((nama == null || nama === "") && (selected == null || selected === "")) {
-      alert("Mohon isi Username dan pilih tipe game");
-    } else {
-      console.log(nama);
-      console.log(selected);
-      window.location.href = "main.html";
-
-    };
+  masuk.addEventListener('click', () => { 
+    
+    window.location.href = "main.html";
     
   });
 
   function muncul() {
     judul.classList.add('hidden');
     pandu.classList.add('hidden');
-    open.classList.add('hidden');
+    masuk.classList.add('hidden');
+    hst.classList.add('hidden');
   };
   function tutup() {
     judul.classList.remove('hidden');
     pandu.classList.remove('hidden');
-    open.classList.remove('hidden');
+    masuk.classList.remove('hidden');
+    hst.classList.remove('hidden');
   };
+
+  hst.addEventListener('click', () => {
+    c_hst.classList.remove('hidden');
+    muncul();
+  })
+  ttp_his.addEventListener('click', () => {
+    c_hst.classList.add('hidden');
+    tutup();
+  })
 
   pandu.addEventListener('click', () => {
     panduan.classList.remove('hidden');
     muncul();
   })
-
-  open.addEventListener('click', () => {
-    card.classList.remove('hidden');
-    muncul();
-  });
- 
-  close.addEventListener('click', () => {
-    card.classList.add('hidden');
-    tutup();
-  });
-  
   tutupDocs.addEventListener('click', () => {
     panduan.classList.add('hidden');
     tutup();
   })
+
+
+  const lama = JSON.parse(localStorage.getItem("dataGame")) || [];
+  const ol = document.getElementById("riwayat");
+
+  ol.innerHTML = ""; // bersihkan dulu (penting)
+
+  lama.forEach(item => {
+      const li = document.createElement("li");
+      const tanggal = new Date(item.tanggal).toLocaleString("id-ID");
+      li.className = "w-79 flex justify-center bg-blue-400 rounded-lg border border-b-blue-900 text-lg font-bold";
+      li.textContent = `Skor: ${item.skor} — ${tanggal}`;
+      ol.appendChild(li);
+  });
+
+
 </script>
 <script>
   lucide.createIcons();
