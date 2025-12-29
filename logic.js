@@ -1,3 +1,11 @@
+const SFX_TRUE = 'asset/benar.mp3';
+const SFX_FALSE = 'asset/salah.mp3';
+
+class sound {
+    static benar() { new Audio(SFX_TRUE).play();}
+    static salah() { new Audio(SFX_FALSE).play();}
+}
+
 // ==========================================
 // 1. ABSTRACT CLASS (ABSTRAKSI)
 // ==========================================
@@ -6,7 +14,7 @@ class QuestionProvider {
         throw new Error("fetchQuestion() harus dioverride oleh subclass");
     }
 }
-
+  
 const popup = document.getElementById("popup");
 const closePopup = document.getElementById("closePopup");
 
@@ -93,7 +101,7 @@ class Game {
         clearInterval(this.#timerInterval); // stop timer lama
 
         this.score = 0;
-        this.#timeLeft = 10;
+        this.#timeLeft = 60;
         this.updateScoreDisplay();
         this.updateTimerDisplay();
     }
@@ -202,11 +210,14 @@ class Game {
         if (selected === correct) {
             this.score += 10;
             this.updateScoreDisplay();
+            sound.benar();
+        }else {
+            sound.salah();
         }
 
         setTimeout(() => {
             this.nextQuestion();
-        }, 1000);
+        }, 1500);
     }
 
 }

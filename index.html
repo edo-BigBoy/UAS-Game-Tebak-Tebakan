@@ -15,22 +15,27 @@
       Siap ngetes otak kamu hari ini?
     </h2>
    </div>
-    <div class="flex flex-col sm:flex-row sm:space-x-5 space-y-4 sm:space-y-0">
-        <button id="openRiw" 
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+    <div class="grid grid-cols-2 gap-3 px-5 w-full max-w-sm mx-auto">
+      <div>
+         <button id="openRiw" 
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">
           RIWAYAT
         </button>
-
-        <button id="msk" 
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
-          MULAI
-        </button>
-
+      </div>
+      <div>
         <button id="openDocs" 
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">
           PANDUAN
         </button>
+      </div>
+      <div class="col-span-2">
+        <button id="msk" 
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">
+          MULAI
+        </button>
+      </div>
     </div>
+
   <!-- Card History (default: hidden) -->
   <div id="Histori" class="hidden  mt-6 w-90  p-6 bg-white shadow-xl rounded-xl border border-gray-200">
     <div class="relative flex items-center-safe py-5">
